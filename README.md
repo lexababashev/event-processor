@@ -6,23 +6,22 @@
 $ npm install
 ```
 
-## Project setup
-
-
 ### DB & Prisma
 
 ```bash
-# to run migrations
+# to run pure docker container
 $ docker-compose up -d postgres
 
-# to create prismaClient has to be run after every migraion
+# to apply schema.prisma create init migration and run it
+$ npx prisma migrate dev --name init
+
+# to create prismaClient. it has to be run after every migraion
 $ npx prisma generate
 
 # to seed tables has to be changed after every migraion
 $ npm run seed
 
 ```
-
 
 ## Compile and run the project
 
