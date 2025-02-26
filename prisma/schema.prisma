@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,4 +5,86 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+enum FunnelStage {
+  top
+  bottom
+}
+
+enum Source {
+  facebook
+  tiktok
+}
+
+enum EventType {
+  ad_view
+  page_like
+  comment
+  video_view
+  ad_click
+  form_submission
+  checkout_complete
+  like
+  share
+  profile_visit
+  purchase
+  follow
+}
+
+enum Gender {
+  male
+  female
+  non_binary
+}
+
+model Event {
+  id          String      @id @default(uuid())
+  eventId     String      @unique
+  source      Source
+  funnelStage FunnelStage
+  eventType   EventType
+  eventTime   DateTime
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  userId      String?
+  user        User?       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  engagement  Engagement?
+
+  @@index([createdAt, source, funnelStage, eventType])
+}
+
+model User {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  source      Source
+  name        String?
+  age         Int?
+  gender      Gender?
+  location    String?
+  followers   Int?      // Tiktok
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  events      Event[]
+}
+
+model Engagement {
+  id               String    @id @default(uuid())
+  eventId          String    @unique
+  event            Event     @relation(fields: [eventId], references: [eventId])
+  referrer         String?   // Facebook
+  videoId          String?   // Facebook и Tiktok
+  adId             String?   // Facebook
+  campaignId       String?   // Facebook
+  clickPosition    String?   // Facebook
+  device           String?   // all
+  browser          String?   // Facebook
+  purchaseAmount   Decimal?  
+  watchTime        Int?      // Tiktok
+  percentageWatched Int?     // Tiktok
+  profileId        String?   // Tiktok
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@index([campaignId, createdAt, eventId])
 }
