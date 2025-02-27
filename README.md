@@ -44,7 +44,7 @@ Ensure you have the following installed:
 
 #### Apply Migrations
 ```sh
-npm run db:apply-migations
+npm run db:apply-migrations
 ```
 
 #### Generate Prisma Client (run after applying migrations)
