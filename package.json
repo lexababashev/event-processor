@@ -6,7 +6,6 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-
     "build": "nest build gateway collectors reporter",
     "prod:gateway": "node dist/src/main.gateway.js",
     "dev:gateway": "nest start gateway --watch",
@@ -16,8 +15,6 @@
     "dev:reporter": "nest start reporter --watch",
     "start:prod": "docker-compose up --build",
     "dev": "npm run dev:gateway & npm run dev:collectors & npm run dev:reporter",
-  
-
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "docker:up": "docker-compose up -d",
@@ -27,9 +24,6 @@
     "db:seed": "ts-node prisma/seed.ts",
     "db:migrate": "npx prisma migrate dev --name",
     "db:reset": "npx prisma migrate reset --force && npm run db:seed",
-
-
-
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
