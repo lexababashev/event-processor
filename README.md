@@ -16,7 +16,7 @@ Ensure you have the following installed:
 
 1. **Clone the repository:**
    ```sh
-   git clone <repository-url>
+   git clone https://github.com/lexababashev/event-processor
    cd event-processor
    ```
 
@@ -24,14 +24,14 @@ Ensure you have the following installed:
    ```sh
    cp .env.example .env
    ```
-   Update `.env` file with your local database credentials if needed.
+   Update the `.env` file with your local database credentials if needed.
 
 3. **Install dependencies:**
    ```sh
    npm install
    ```
 
-4. **Start the database and migrations:**
+4. **Start the database and run migrations:**
    ```sh
    npm run docker:up
    ```
@@ -65,13 +65,29 @@ npm run db:reset
 ### Running the Project
 
 #### Development Mode
+To start all services (gateway, collectors, and reporter) in development mode with hot-reloading:
 ```sh
-npm run start:dev
+npm run dev
+```
+
+To start a specific service in development mode:
+```sh
+npm run dev:gateway
+npm run dev:collectors
+npm run dev:reporter
 ```
 
 #### Production Mode
+To start all services (gateway, collectors, and reporter) in production mode:
 ```sh
 npm run start:prod
+```
+
+To start a specific service in production mode:
+```sh
+npm run prod:gateway
+npm run prod:collectors
+npm run prod:reporter
 ```
 
 ### Running Tests

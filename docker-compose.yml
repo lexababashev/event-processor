@@ -13,7 +13,7 @@ services:
       - postgres-data:/var/lib/postgresql/data
 
   migrations:
-    image: node:20
+    image: node:20-alpine
     container_name: event_processor_migrations
     working_dir: /app
     volumes:
@@ -24,6 +24,37 @@ services:
       DATABASE_URL: "postgresql://user:password@postgres:5432/event_processor"
     command: >
       sh -c "npm install && npx prisma migrate deploy && npx prisma generate"
+
+  publisher:
+    image: andriiuni/events
+    container_name: events_publisher
+    restart: always
+    environment:
+      EVENT_ENDPOINT: "http://gateway:3000/events"
+    depends_on:
+      - gateway
+
+  gateway:
+    build:
+      context: .
+      dockerfile: dockerfile.gateway
+    container_name: event_processor_gateway
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      NATS_URL: "nats://nats:4222"
+    depends_on:
+      - nats
+
+  nats:
+    image: nats:latest
+    container_name: event_processor_nats
+    restart: always
+    ports:
+      - "4222:4222"
+      - "8222:8222"
+    command: ["-js"]
 
 volumes:
   postgres-data:

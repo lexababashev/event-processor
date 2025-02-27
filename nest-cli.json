@@ -4,5 +4,19 @@
   "sourceRoot": "src",
   "compilerOptions": {
     "deleteOutDir": true
+  },
+  "projects": {
+    "gateway": {
+      "type": "application",
+      "entryFile": "main.gateway"
+    },
+    "collectors": {
+      "type": "application",
+      "entryFile": "main.collectors"
+    },
+    "reporter": {
+      "type": "application",
+      "entryFile": "main.reporter"
+    }
   }
 }
