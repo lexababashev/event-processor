@@ -13,12 +13,18 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down --volumes",
+    "db:apply-migations": "npx prisma migrate deploy",
+    "db:generate": "npx prisma generate",
+    "db:seed": "ts-node prisma/seed.ts",
+    "db:migrate": "npx prisma migrate dev --name",
+    "db:reset": "npx prisma migrate reset --force && npm run db:seed",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
-    "seed": "ts-node prisma/seed.ts"
+    "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
