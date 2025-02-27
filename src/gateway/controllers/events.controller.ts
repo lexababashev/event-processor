@@ -1,26 +1,14 @@
-import { Controller, Post, Body, Logger } from '@nestjs/common';
-import { NatsClientService } from '../../common/nats-client.service';
-import { z } from 'zod';
-
-const EventSchema = z.object({
-  // Define the schema based on your event structure
-});
+import { Controller, Post, Body } from '@nestjs/common';
+import { EventsService } from '../services/events.service';
+import { Event } from '../../common/types/event';
 
 @Controller('events')
 export class EventsController {
-  private readonly logger = new Logger(EventsController.name);
-
-  constructor(private readonly natsClientService: NatsClientService) {}
+  constructor(private readonly eventsService: EventsService) {}
 
   @Post()
-  async handleEvent(@Body() body: any) {
-    try {
-      const parsedEvent = EventSchema.parse(body);
-      await this.natsClientService.publish('event.topic', parsedEvent);
-      this.logger.log('Event published to NATS');
-    } catch (e) {
-      this.logger.error('Invalid event format', e);
-      throw e;
-    }
+  async handleEvent(@Body() event: Event) {
+    await this.eventsService.handleEvent(event);
+    return { status: 'Event received' };
   }
 }
