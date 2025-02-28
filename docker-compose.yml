@@ -37,7 +37,7 @@ services:
   gateway:
     build:
       context: .
-      dockerfile: dockerfile.gateway
+      dockerfile: Dockerfile.gateway
     container_name: event_processor_gateway
     restart: always
     ports:
@@ -51,10 +51,14 @@ services:
     image: andriiuni/events
     container_name: events_publisher
     restart: always
+    platform: linux/arm64/v8  # Explicitly set the platform
+    network_mode: "host"  # Use host network - container shares network with host
     environment:
-      EVENT_ENDPOINT: "http://gateway:3000/events"
+      EVENT_ENDPOINT: "http://192.168.0.106:3000/events"  # Use localhost since we're in host network mode
     depends_on:
-      - gateway
+      - nats
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
 volumes:
   postgres-data:

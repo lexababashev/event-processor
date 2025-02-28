@@ -8,7 +8,8 @@ export class EventsService {
 
   async handleEvent(event: Event) {
     const topic = `events.${event.source}`;
-    await this.natsClient.publish(topic, event);
+    //await this.natsClient.publish(topic, event);
+    console.log(event);
     console.log(`Event published to ${topic}`);
   }
 }
