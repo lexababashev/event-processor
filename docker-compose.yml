@@ -32,7 +32,7 @@ services:
     ports:
       - "4222:4222"
       - "8222:8222"
-    command: ["-js", "-m", "8222"]
+    command: ["-js", "-m", "8222",  "--store_dir", "/var/lib/nats/jetstream"]
     volumes:
       - nats-data:/var/lib/nats/jetstream 
 

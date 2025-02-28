@@ -53,8 +53,8 @@ export class NatsClientService implements OnModuleInit, OnModuleDestroy {
             name: streamName,
             subjects,
             retention: RetentionPolicy.Limits,
-            max_msgs: -1,
-            max_bytes: -1,
+            max_msgs: 1000000,
+            max_bytes: 1024 * 1024 * 1024 * 10, // 10GB limit
             discard: DiscardPolicy.Old,
             storage: StorageType.File,
           });
