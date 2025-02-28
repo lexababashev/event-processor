@@ -38,7 +38,6 @@
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/typeorm": "^11.0.0",
     "@prisma/client": "^6.4.1",
-    "bull": "^4.16.5",
     "nats": "^2.29.2",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",

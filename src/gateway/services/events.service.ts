@@ -1,15 +1,19 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { NatsClientService } from '../../common/nats-client.service';
 import { Event } from '../../common/types/event';
 
 @Injectable()
 export class EventsService {
-  constructor(private readonly natsClient: NatsClientService) {}
+  private readonly logger = new Logger(EventsService.name);
 
-  async handleEvent(event: Event) {
-    const topic = `events.${event.source}`;
-    //await this.natsClient.publish(topic, event);
-    console.log(event);
-    console.log(`Event published to ${topic}`);
+  constructor(private readonly natsClientService: NatsClientService) {}
+
+  async handleEvents(events: Event[]): Promise<void> {
+    this.logger.log(`Processing ${events.length} events...`);
+
+    // Публикуем события в NATS параллельно
+    await Promise.all(events.map((event) => this.natsClientService.publishEvent(event)));
+
+    this.logger.log(`✅ Published ${events.length} events to NATS`);
   }
 }
