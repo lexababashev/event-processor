@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { NatsClientService } from '../../common/nats-client.service';
-import { Event } from '../../common/types/event';
+import { NatsClientService } from '@app/common/services/nats-client.service';
+import { Event } from '@app/common/types/event';
 
 @Injectable()
 export class EventsService {

@@ -5,6 +5,6 @@ COPY package*.json ./
 RUN npm install --only=production
 
 COPY . .
-WORKDIR /app/apps/reporter
+WORKDIR /app/apps/fs-collector
 
 CMD ["node", "dist/main.js"]

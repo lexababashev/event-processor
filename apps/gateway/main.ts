@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { GatewayModule } from './gateway/gateway.module';
+import { GatewayModule } from './src/gateway.module';
 import { Logger } from '@nestjs/common';
 import { json } from 'express';
 

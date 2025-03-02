@@ -1,22 +1,26 @@
 {
-  "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "src",
-  "compilerOptions": {
-    "deleteOutDir": true
-  },
+  "sourceRoot": "apps",
+  "monorepo": true,
+  "root": "apps",
   "projects": {
     "gateway": {
       "type": "application",
-      "entryFile": "main.gateway"
+      "root": "apps/gateway",
+      "entryFile": "main",
+      "sourceRoot": "apps/gateway/src"
     },
     "collectors": {
       "type": "application",
-      "entryFile": "main.collectors"
+      "root": "apps/collectors",
+      "entryFile": "main",
+      "sourceRoot": "apps/collectors/src"
     },
     "reporter": {
       "type": "application",
-      "entryFile": "main.reporter"
+      "root": "apps/reporter",
+      "entryFile": "main",
+      "sourceRoot": "apps/reporter/src"
     }
   }
 }

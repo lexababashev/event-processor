@@ -1,4 +1,17 @@
 services:
+  publisher:
+    image: andriiuni/events
+    container_name: events_publisher
+    restart: always
+    platform: linux/arm64/v8  # Explicitly set the platform
+    network_mode: "host"  # Use host network - container shares network with host
+    environment:
+      EVENT_ENDPOINT: "http://192.168.0.106:3000/events"  # Use localhost since we're in host network mode
+    depends_on:
+      - nats
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
   postgres:
     image: postgres:15
     container_name: event_processor_db
@@ -49,20 +62,42 @@ services:
       GATEWAY_PORT: 3000
     depends_on:
       - nats
-  
-  publisher:
-    image: andriiuni/events
-    container_name: events_publisher
+
+  fs-collector:
+    build:
+      context: .
+      dockerfile: Dockerfile.fscollector
+    container_name: event_processor_fscollector
     restart: always
-    platform: linux/arm64/v8  # Explicitly set the platform
-    network_mode: "host"  # Use host network - container shares network with host
     environment:
-      EVENT_ENDPOINT: "http://192.168.0.106:3000/events"  # Use localhost since we're in host network mode
+      NATS_URL: "nats://nats:4222"
     depends_on:
       - nats
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
 
+  ttk-collector:
+    build:
+      context: .
+      dockerfile: Dockerfile.ttkcollector
+    container_name: event_processor_ttkcollector
+    restart: always
+    environment:
+      NATS_URL: "nats://nats:4222"
+    depends_on:
+      - nats
+
+  reporter:
+    build:
+      context: .
+      dockerfile: Dockerfile.reporter
+    container_name: event_processor_reporter
+    restart: always
+    environment:
+      NATS_URL: "nats://nats:4222"
+      DATABASE_URL: "postgresql://user:password@postgres:5432/event_processor"
+    depends_on:
+      - nats
+      - postgres
+  
 volumes:
   nats-data:
   postgres-data:
