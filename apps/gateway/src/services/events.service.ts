@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { NatsClientService } from '@app/common/services/nats-client.service';
+import { NatsClientService } from '@app/common/nats-client.service';
 import { Event } from '@app/common/types/event';
 
 @Injectable()

@@ -18,9 +18,16 @@
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
+      "@app/gateway/*": ["apps/gateway/src/*"],
+      "@app/gateway": ["apps/gateway/src"],
+      "@app/fs-collector/*": ["apps/fs-collector/src/*"],
+      "@app/fs-collector": ["apps/fs-collector/src"],
+      "@app/ttk-collector/*": ["apps/ttk-collector/src/*"],
+      "@app/ttk-collector": ["apps/ttk-collector/src"],
+      "@app/reporter/*": ["apps/reporter/src/*"],
+      "@app/reporter": ["apps/reporter/src"],
       "@app/common/*": ["libs/common/src/*"],
-      "@app/common": ["libs/common/src/index"],
-      "@common/*": ["libs/common/src/*"]
+      "@app/common": ["libs/common/src"]
     },
     "rootDir": "."
   },

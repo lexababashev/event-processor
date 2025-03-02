@@ -1,26 +1,49 @@
 {
+  "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
   "sourceRoot": "apps",
   "monorepo": true,
   "root": "apps",
+  "compilerOptions": {
+    "webpack": false,
+    "tsConfigPath": "tsconfig.build.json"
+  },
   "projects": {
     "gateway": {
       "type": "application",
       "root": "apps/gateway",
       "entryFile": "main",
-      "sourceRoot": "apps/gateway/src"
+      "sourceRoot": "apps/gateway/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/gateway/tsconfig.json"
+      }
     },
-    "collectors": {
+    "fs-collector": {
       "type": "application",
-      "root": "apps/collectors",
+      "root": "apps/fs-collector",
       "entryFile": "main",
-      "sourceRoot": "apps/collectors/src"
+      "sourceRoot": "apps/fs-collector/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/fs-collector/tsconfig.json"
+      }
+    },
+    "ttk-collector": {
+      "type": "application",
+      "root": "apps/ttk-collector",
+      "entryFile": "main",
+      "sourceRoot": "apps/ttk-collector/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/ttk-collector/tsconfig.json"
+      }
     },
     "reporter": {
       "type": "application",
       "root": "apps/reporter",
       "entryFile": "main",
-      "sourceRoot": "apps/reporter/src"
+      "sourceRoot": "apps/reporter/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/reporter/tsconfig.json"
+      }
     }
   }
 }

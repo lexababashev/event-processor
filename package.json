@@ -7,11 +7,23 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
+    "build:gateway": "nest build gateway",
+    "build:fs-collector": "nest build fs-collector",
+    "build:ttk-collector": "nest build ttk-collector",
+    "build:reporter": "nest build reporter",
+    
     "start": "nest start",
     "start:dev": "nest start --watch",
-    "start:gateway": "nest start gateway",
-    "start:collectors": "nest start collectors",
-    "start:reporter": "nest start reporter",
+    "start:gateway": "nest start gateway --watch",
+    "start:fs-collector": "nest start fs-collector --watch",
+    "start:ttk-collector": "nest start ttk-collector --watch",
+    "start:reporter": "nest start reporter --watch",
+    
+    "start:gateway:prod": "node dist/apps/gateway/main",
+    "start:fs-collector:prod": "node dist/apps/fs-collector/main",
+    "start:ttk-collector:prod": "node dist/apps/ttk-collector/main",
+    "start:reporter:prod": "node dist/apps/reporter/main",
+    
     "start:prod": "docker-compose up --build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",

@@ -14,7 +14,7 @@ import {
   DiscardPolicy,
 } from 'nats';
 import { ConfigService } from '@nestjs/config';
-import { Event } from '../types/event';
+import { Event } from './types/event';
 
 @Injectable()
 export class NatsClientService implements OnModuleInit, OnModuleDestroy {
