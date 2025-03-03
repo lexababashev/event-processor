@@ -1,16 +1,4 @@
 services:
-  publisher:
-    image: andriiuni/events
-    container_name: events_publisher
-    restart: always
-    platform: linux/arm64/v8  # Explicitly set the platform
-    environment:
-      EVENT_ENDPOINT: "http://gateway:3000/events"
-    depends_on:
-      - nats
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-
   postgres:
     image: postgres:15
     container_name: event_processor_db
@@ -36,6 +24,18 @@ services:
       DATABASE_URL: "postgresql://user:password@postgres:5432/event_processor"
     command: >
       sh -c "npm install && npx prisma migrate deploy && npx prisma generate"
+
+  publisher:
+    image: andriiuni/events
+    container_name: events_publisher
+    restart: always
+    platform: linux/arm64/v8  # Explicitly set the platform
+    environment:
+      EVENT_ENDPOINT: "http://gateway:3000/events"
+    depends_on:
+      - nats
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   nats:
     image: nats:latest
@@ -71,40 +71,40 @@ services:
           cpus: "1"
           memory: "1G"
 
-  fs-collector:
-    build:
-      context: .
-      dockerfile: Dockerfile.fscollector
-    container_name: event_processor_fscollector
-    restart: always
-    environment:
-      NATS_URL: "nats://nats:4222"
-    depends_on:
-      - nats
+  # fs-collector:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.fscollector
+  #   container_name: event_processor_fscollector
+  #   restart: always
+  #   environment:
+  #     NATS_URL: "nats://nats:4222"
+  #   depends_on:
+  #     - nats
 
-  ttk-collector:
-    build:
-      context: .
-      dockerfile: Dockerfile.ttkcollector
-    container_name: event_processor_ttkcollector
-    restart: always
-    environment:
-      NATS_URL: "nats://nats:4222"
-    depends_on:
-      - nats
+  # ttk-collector:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.ttkcollector
+  #   container_name: event_processor_ttkcollector
+  #   restart: always
+  #   environment:
+  #     NATS_URL: "nats://nats:4222"
+  #   depends_on:
+  #     - nats
 
-  reporter:
-    build:
-      context: .
-      dockerfile: Dockerfile.reporter
-    container_name: event_processor_reporter
-    restart: always
-    environment:
-      NATS_URL: "nats://nats:4222"
-      DATABASE_URL: "postgresql://user:password@postgres:5432/event_processor"
-    depends_on:
-      - nats
-      - postgres
+  # reporter:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.reporter
+  #   container_name: event_processor_reporter
+  #   restart: always
+  #   environment:
+  #     NATS_URL: "nats://nats:4222"
+  #     DATABASE_URL: "postgresql://user:password@postgres:5432/event_processor"
+  #   depends_on:
+  #     - nats
+  #     - postgres
   
 volumes:
   nats-data:
