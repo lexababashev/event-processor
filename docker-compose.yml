@@ -4,9 +4,8 @@ services:
     container_name: events_publisher
     restart: always
     platform: linux/arm64/v8  # Explicitly set the platform
-    network_mode: "host"  # Use host network - container shares network with host
     environment:
-      EVENT_ENDPOINT: "http://192.168.0.106:3000/events"  # Use localhost since we're in host network mode
+      EVENT_ENDPOINT: "http://gateway:3000/events"
     depends_on:
       - nats
     extra_hosts:
@@ -62,6 +61,15 @@ services:
       GATEWAY_PORT: 3000
     depends_on:
       - nats
+    deploy:
+      #replicas: 3
+      resources:
+        limits:
+          cpus: "2"
+          memory: "4G"
+        reservations:
+          cpus: "1"
+          memory: "1G"
 
   fs-collector:
     build:

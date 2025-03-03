@@ -6,7 +6,7 @@ import { NatsClientService } from '@app/common/nats-client.service';
 
 @Module({
   imports: [
-    // Загружаем переменные окружения из .env (при наличии)
+    // .env file is loaded in the root module
     ConfigModule.forRoot({
       isGlobal: true,
     }),
