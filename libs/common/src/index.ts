@@ -1,2 +1,2 @@
-export * from "./types/event";
-export * from "./nats-client.service";
+export * from './types/event';
+export * from './nats-client.service';

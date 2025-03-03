@@ -10,12 +10,17 @@ export class EventsService {
 
   async handleEvents(events: Event[]): Promise<void> {
     this.logger.log(`Publishing ${events.length} events to NATS...`);
-    
+
     try {
-      await Promise.all(events.map(event => this.natsClientService.publishEvent(event)));
+      await Promise.all(
+        events.map((event) => this.natsClientService.publishEvent(event)),
+      );
       this.logger.log(`✅ Successfully published ${events.length} events`);
     } catch (error) {
-      this.logger.error(`Failed to publish events: ${error.message}`, error.stack);
+      this.logger.error(
+        `Failed to publish events: ${error.message}`,
+        error.stack,
+      );
       throw error;
     }
   }

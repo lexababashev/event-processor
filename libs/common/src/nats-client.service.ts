@@ -26,12 +26,13 @@ export class NatsClientService implements OnModuleInit, OnModuleDestroy {
   constructor(private readonly configService: ConfigService) {}
 
   async onModuleInit() {
-    // Инициируем соединение с NATS
-    const natsUrl = this.configService.get<string>('NATS_URL', 'nats://localhost:4222');
+    const natsUrl = this.configService.get<string>(
+      'NATS_URL',
+      'nats://localhost:4222',
+    );
     this.natsConnection = await connect({ servers: natsUrl });
     this.jetStream = this.natsConnection.jetstream();
 
-    // Убеждаемся, что JetStream-сервисы готовы
     await this.ensureStreamExists('FB_EVENTS', ['FB_EVENTS.*']);
     await this.ensureStreamExists('TT_EVENTS', ['TT_EVENTS.*']);
 
@@ -41,11 +42,11 @@ export class NatsClientService implements OnModuleInit, OnModuleDestroy {
   async ensureStreamExists(streamName: string, subjects: string[]) {
     try {
       const jsm = await this.natsConnection.jetstreamManager();
-      // Проверяем, существует ли стрим
       const info = await jsm.streams.info(streamName);
-      this.logger.log(`Stream [${streamName}] already exists (subjects: ${info.config.subjects.join(', ')})`);
+      this.logger.log(
+        `Stream [${streamName}] already exists (subjects: ${info.config.subjects.join(', ')})`,
+      );
     } catch (error) {
-      // Если стрима нет, пытаемся создать
       if (error.message.includes('stream not found')) {
         try {
           const jsm = await this.natsConnection.jetstreamManager();
@@ -53,36 +54,39 @@ export class NatsClientService implements OnModuleInit, OnModuleDestroy {
             name: streamName,
             subjects,
             retention: RetentionPolicy.Limits,
-            max_msgs: 4000000,
-            max_bytes: 1024 * 1024 * 1024 * 10, // 10GB limit
+            max_msgs: 300000,
+            max_bytes: 1024 * 1024 * 1024 * 0.75, // 0.75GB limit
             discard: DiscardPolicy.Old,
             storage: StorageType.File,
           });
-          this.logger.log(`✅ Created stream [${streamName}] with subjects: ${subjects.join(', ')}`);
+          this.logger.log(
+            `✅ Created stream [${streamName}] with subjects: ${subjects.join(', ')}`,
+          );
         } catch (createError) {
-          this.logger.error(`Failed to create stream [${streamName}]: ${createError.message}`);
+          this.logger.error(
+            `Failed to create stream [${streamName}]: ${createError.message}`,
+          );
         }
       } else {
-        this.logger.error(`Error checking stream [${streamName}]: ${error.message}`);
+        this.logger.error(
+          `Error checking stream [${streamName}]: ${error.message}`,
+        );
       }
     }
   }
 
-  /**
-   * Публикуем событие в JetStream
-   */
   async publishEvent(event: Event) {
-    // Определяем сабджект в зависимости от source
     const subject = this.getSubject(event);
     if (!subject) {
       this.logger.error(`Unknown event source: ${event.source}`);
       return;
     }
     try {
-      // Публикуем
       await this.jetStream.publish(subject, this.codec.encode(event));
     } catch (err: any) {
-      this.logger.error(`❌ Failed to publish event to subject [${subject}]: ${err.message}`);
+      this.logger.error(
+        `❌ Failed to publish event to subject [${subject}]: ${err.message}`,
+      );
       throw err;
     }
   }
@@ -94,7 +98,6 @@ export class NatsClientService implements OnModuleInit, OnModuleDestroy {
   }
 
   async onModuleDestroy() {
-    // Корректно завершаем соединение
     try {
       this.logger.log('Draining NATS connection...');
       await this.natsConnection.drain();

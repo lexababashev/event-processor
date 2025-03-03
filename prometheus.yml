@@ -1,0 +1,23 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  # Scrape Prometheus itself
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # Scrape Gateway (NestJS metrics endpoint assumed at /metrics)
+  - job_name: 'gateway'
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['event_processor_gateway:3000']
+
+  # Scrape additional services if they expose metrics
+  # - job_name: 'fs-collector'
+  #   metrics_path: /metrics
+  #   static_configs:
+  #     - targets: ['event_processor_fscollector:3000']
+
+  # etc. (include other collectors, reporter, etc.)

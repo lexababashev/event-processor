@@ -10,12 +10,10 @@ export class EventsController {
 
   @Post()
   async handleEvents(@Body() incoming: Event | Event[]) {
-    // Если приходит один объект, превращаем его в массив
     const events = Array.isArray(incoming) ? incoming : [incoming];
 
     this.logger.log(`Received ${events.length} events`);
 
-    // Пишем события в NATS
     await this.eventsService.handleEvents(events);
 
     return { status: 'ok', received: events.length };

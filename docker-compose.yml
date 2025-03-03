@@ -46,8 +46,16 @@ services:
       - "8222:8222"
     command: ["-js", "-m", "8222",  "--store_dir", "/var/lib/nats/jetstream"]
     volumes:
-      - nats-data:/var/lib/nats/jetstream 
-
+      - nats-data:/var/lib/nats/jetstream
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: "2G"
+        reservations:
+          cpus: "1"
+          memory: "1G"   
+    
   gateway:
     build:
       context: .
@@ -62,14 +70,26 @@ services:
     depends_on:
       - nats
     deploy:
-      #replicas: 3
       resources:
         limits:
           cpus: "2"
-          memory: "4G"
+          memory: "2G"
         reservations:
           cpus: "1"
           memory: "1G"
+    
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: event_processor_prometheus
+    restart: always
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    depends_on:
+      - gateway
+      # - fs-collector
+      # - ttk-collector
 
   # fs-collector:
   #   build:
