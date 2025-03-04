@@ -50,8 +50,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "2"
-          memory: "2G"
+          cpus: "4"
+          memory: "4G"
         reservations:
           cpus: "1"
           memory: "1G"   
@@ -83,13 +83,27 @@ services:
     container_name: event_processor_prometheus
     restart: always
     ports:
-      - "9090:9090"
+      - "9090:9090" # Prometheus http://localhost:9090
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     depends_on:
       - gateway
       # - fs-collector
       # - ttk-collector
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: event_processor_grafana
+    restart: always
+    ports:
+      - "3031:3000"  # Grafana http://localhost:3031
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - prometheus
 
   # fs-collector:
   #   build:
@@ -129,3 +143,4 @@ services:
 volumes:
   nats-data:
   postgres-data:
+  grafana-data:
