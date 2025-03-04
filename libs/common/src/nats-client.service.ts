@@ -61,9 +61,10 @@ export class NatsClientService implements OnModuleInit, OnModuleDestroy {
           await jsm.streams.add({
             name: streamName,
             subjects,
-            retention: RetentionPolicy.Limits,
-            max_msgs: 300000,
-            max_bytes: 1024 * 1024 * 1024 * 0.75, // 0.75GB limit
+            retention: RetentionPolicy.Workqueue,
+            // retention: RetentionPolicy.Limits,
+            // max_msgs: 10000,
+            // max_bytes: 1024 * 1024 * 1024 * 0.5, // 0.5GB
             discard: DiscardPolicy.Old,
             storage: StorageType.File,
           });

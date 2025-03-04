@@ -1,9 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import {
   JSONCodec,
-  consumerOpts,
-  JetStreamSubscription,
-  createInbox,
 } from 'nats';
 import { PrismaService } from './prisma.service';
 import { NatsClientService } from '@app/common/nats-client.service';
@@ -21,7 +18,6 @@ import { AckPolicy, DeliverPolicy } from 'nats';
 @Injectable()
 export class FsCollectorService {
   private readonly logger = new Logger(FsCollectorService.name);
-  private jetStreamSub: JetStreamSubscription | undefined;
   private readonly codec = JSONCodec<FacebookEvent>();
 
   constructor(
@@ -61,10 +57,14 @@ export class FsCollectorService {
         for await (const msg of sub) {
           try {
             const eventData = this.codec.decode(msg.data);
-            this.logger.debug(`Received FB event: ${eventData.eventId}`,);
+
+            //this.logger.debug(`Received FB event: ${eventData.eventId}`,);
 
             await this.storeFacebookEvent(eventData);
             msg.ack();
+
+            //this.logger.log(`✅ Event ${eventData.eventId} acknowledged`);
+
           } catch (err) {
             this.logger.error(`❌ Failed to process FB event: ${err.message}`);
           }
@@ -96,7 +96,7 @@ export class FsCollectorService {
               userId: user.userId,
               name: user.name,
               age: user.age,
-              gender: user.gender as Gender,
+              gender: user.gender === "non-binary" ? "non_binary" : (user.gender as Gender),
               locCountry: user.location.country,
               locCity: user.location.city,
               actionTime:
@@ -133,7 +133,7 @@ export class FsCollectorService {
         },
       });
 
-      this.logger.log(`Stored Facebook event [${event.eventId}] successfully.`);
+      //this.logger.log(`Stored Facebook event [${event.eventId}] successfully.`);
       return result;
     } catch (error) {
       this.logger.error(
