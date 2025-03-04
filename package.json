@@ -11,7 +11,6 @@
     "build:fs-collector": "nest build fs-collector",
     "build:ttk-collector": "nest build ttk-collector",
     "build:reporter": "nest build reporter",
-    "start": "nest start",
     "start:dev": "nest start --watch",
     "start:gateway": "nest start gateway --watch",
     "start:fs-collector": "nest start fs-collector --watch",
