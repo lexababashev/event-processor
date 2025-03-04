@@ -1,7 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import {
-  JSONCodec,
-} from 'nats';
+import { JSONCodec } from 'nats';
 import { PrismaService } from './prisma.service';
 import { NatsClientService } from '@app/common/nats-client.service';
 import { FacebookEvent } from '@app/common/types/event';
@@ -64,7 +62,6 @@ export class FsCollectorService {
             msg.ack();
 
             //this.logger.log(`✅ Event ${eventData.eventId} acknowledged`);
-
           } catch (err) {
             this.logger.error(`❌ Failed to process FB event: ${err.message}`);
           }
@@ -96,7 +93,10 @@ export class FsCollectorService {
               userId: user.userId,
               name: user.name,
               age: user.age,
-              gender: user.gender === "non-binary" ? "non_binary" : (user.gender as Gender),
+              gender:
+                user.gender === 'non-binary'
+                  ? 'non_binary'
+                  : (user.gender as Gender),
               locCountry: user.location.country,
               locCity: user.location.city,
               actionTime:

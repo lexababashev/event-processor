@@ -105,16 +105,25 @@ services:
     depends_on:
       - prometheus
 
-  # fs-collector:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile.fscollector
-  #   container_name: event_processor_fscollector
-  #   restart: always
-  #   environment:
-  #     NATS_URL: "nats://nats:4222"
-  #   depends_on:
-  #     - nats
+  fs-collector:
+    build:
+      context: .
+      dockerfile: Dockerfile.fscollector
+    container_name: event_processor_fscollector
+    restart: always
+    environment:
+      DATABASE_URL: "postgresql://user:password@postgres:5432/event_processor?schema=public"
+      NATS_URL: "nats://nats:4222"
+    depends_on:
+      - nats
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: "2G"
+        reservations:
+          cpus: "1"
+          memory: "1G"
 
   # ttk-collector:
   #   build:

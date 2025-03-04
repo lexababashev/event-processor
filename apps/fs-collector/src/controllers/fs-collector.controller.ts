@@ -1,6 +1,6 @@
 import { Controller, Post, Body } from '@nestjs/common';
 import { FsCollectorService } from '../services/fs-collector.service';
-import { Event, FacebookEvent } from '@app/common/types/event';
+import { FacebookEvent } from '@app/common/types/event';
 
 @Controller('fs-collector')
 export class FsCollectorController {
