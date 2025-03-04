@@ -14,7 +14,7 @@ lerna-debug.log*
 
 # OS
 .DS_Store
-project_structure.txt
+structure.txt
 
 # Tests
 /coverage

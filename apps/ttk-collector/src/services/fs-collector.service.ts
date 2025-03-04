@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { JSONCodec } from 'nats';
-import { PrismaService } from '@app/common/prisma.service';
+import { PrismaService } from './prisma.service';
 import { NatsClientService } from '@app/common/nats-client.service';
 import { FacebookEvent } from '@app/common/types/event';
 import {
