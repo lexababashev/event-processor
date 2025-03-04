@@ -42,8 +42,14 @@ export class TtkCollectorService {
         for await (const msg of sub) {
           try {
             const eventData = this.codec.decode(msg.data);
+
+            //this.logger.debug(`Received TT event: ${eventData.eventId}`,);
+
             await this.storeTiktokEvent(eventData);
             msg.ack();
+
+            //this.logger.log(`✅ Event ${eventData.eventId} acknowledged`);
+            
           } catch (err) {
             this.logger.error(`❌ Failed to process TT event: ${err.message}`);
           }
@@ -72,17 +78,30 @@ export class TtkCollectorService {
               userId: user.userId,
               username: user.username,
               followers: user.followers,
-              watchTime: 'watchTime' in engagement ? engagement.watchTime : null,
-              percentageWatched: 'percentageWatched' in engagement ? engagement.percentageWatched : null,
-              device: 'device' in engagement ? (engagement.device as TiktokDevice) : null,
+              watchTime:
+                'watchTime' in engagement ? engagement.watchTime : null,
+              percentageWatched:
+                'percentageWatched' in engagement
+                  ? engagement.percentageWatched
+                  : null,
+              device:
+                'device' in engagement
+                  ? (engagement.device as TiktokDevice)
+                  : null,
               country: 'country' in engagement ? engagement.country : null,
               videoId: 'videoId' in engagement ? engagement.videoId : null,
-              actionTime: 'actionTime' in engagement ? new Date(engagement.actionTime) : null,
-              profileId: 'profileId' in engagement ? engagement.profileId : null,
-              purchasedItem: 'purchasedItem' in engagement ? engagement.purchasedItem : null,
-              purchaseAmount: 'purchaseAmount' in engagement && engagement.purchaseAmount
-                ? new Prisma.Decimal(engagement.purchaseAmount)
-                : null,
+              actionTime:
+                'actionTime' in engagement
+                  ? new Date(engagement.actionTime)
+                  : null,
+              profileId:
+                'profileId' in engagement ? engagement.profileId : null,
+              purchasedItem:
+                'purchasedItem' in engagement ? engagement.purchasedItem : null,
+              purchaseAmount:
+                'purchaseAmount' in engagement && engagement.purchaseAmount
+                  ? new Prisma.Decimal(engagement.purchaseAmount)
+                  : null,
             },
           },
         },
@@ -90,6 +109,8 @@ export class TtkCollectorService {
           tiktokEventData: true,
         },
       });
+
+      //this.logger.log(`Stored TT event [${event.eventId}] successfully.`);
 
       return result;
     } catch (error) {
