@@ -1,15 +1,10 @@
-generator client {
-  provider = "prisma-client-js"
-}
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-enum FunnelStage {
-  top
-  bottom
+generator client {
+  provider = "prisma-client-js"
 }
 
 enum Source {
@@ -17,19 +12,9 @@ enum Source {
   tiktok
 }
 
-enum EventType {
-  ad_view
-  page_like
-  comment
-  video_view
-  ad_click
-  form_submission
-  checkout_complete
-  like
-  share
-  profile_visit
-  purchase
-  follow
+enum FunnelStage {
+  top
+  bottom
 }
 
 enum Gender {
@@ -38,53 +23,103 @@ enum Gender {
   non_binary
 }
 
+enum FacebookReferrer {
+  newsfeed
+  marketplace
+  groups
+}
+
+enum ClickPosition {
+  top_left
+  bottom_right
+  center
+}
+
+enum Device {
+  mobile
+  desktop
+}
+
+enum Browser {
+  Chrome
+  Firefox
+  Safari
+}
+
+enum TiktokDevice {
+  Android
+  iOS
+  Desktop
+}
+
 model Event {
-  id          String      @id @default(uuid())
-  eventId     String      @unique
-  source      Source
-  funnelStage FunnelStage
-  eventType   EventType
-  eventTime   DateTime
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  userId      String?
-  user        User?       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  engagement  Engagement?
+  id            String       @id @default(uuid())
+  eventId       String       // External event ID
+  timestamp     DateTime
+  source        Source
+  funnelStage   FunnelStage
+  eventType     String
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
 
-  @@index([createdAt, source, funnelStage, eventType])
+  facebookEventData FacebookEventData?
+  tiktokEventData   TiktokEventData?
+
+  @@index([timestamp])
+  @@index([source])
+  @@index([funnelStage])
+  @@map("events")
 }
 
-model User {
-  id          String   @id @default(uuid())
-  userId      String   @unique
-  source      Source
-  name        String?
-  age         Int?
-  gender      Gender?
-  location    String?
-  followers   Int?      // Tiktok
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  events      Event[]
+/**
+ * Facebook-specific event data
+ */
+model FacebookEventData {
+  id            String           @id @default(uuid())
+  userId        String
+  name          String
+  age           Int
+  gender        Gender
+  locCountry    String
+  locCity       String
+  actionTime    DateTime?
+  referrer      FacebookReferrer?
+  videoId       String?
+  adId          String?
+  campaignId    String?
+  clickPosition ClickPosition?
+  device        Device?
+  browser       Browser?
+  purchaseAmount Decimal?
+
+  // Relation back to Event
+  event   Event  @relation(fields: [eventId], references: [id])
+  eventId String @unique
+
+  @@map("facebook_event_data")
 }
 
-model Engagement {
-  id               String    @id @default(uuid())
-  eventId          String    @unique
-  event            Event     @relation(fields: [eventId], references: [eventId])
-  referrer         String?   // Facebook
-  videoId          String?   // Facebook и Tiktok
-  adId             String?   // Facebook
-  campaignId       String?   // Facebook
-  clickPosition    String?   // Facebook
-  device           String?   // all
-  browser          String?   // Facebook
-  purchaseAmount   Decimal?  
-  watchTime        Int?      // Tiktok
-  percentageWatched Int?     // Tiktok
-  profileId        String?   // Tiktok
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+/**
+ * TikTok-specific event data
+ */
+model TiktokEventData {
+  id               String        @id @default(uuid())
+  userId           String
+  username         String
+  followers        Int
+  watchTime        Int?
+  percentageWatched Int?
+  device           TiktokDevice?
+  country          String?
+  videoId          String?
+  actionTime       DateTime?
+  profileId        String?
+  purchasedItem    String?
+  purchaseAmount   Decimal?
 
-  @@index([campaignId, createdAt, eventId])
+  // Relation back to Event
+  event   Event  @relation(fields: [eventId], references: [id])
+  eventId String @unique  // Added @unique constraint
+
+  @@map("tiktok_event_data")
 }

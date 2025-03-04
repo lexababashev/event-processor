@@ -39,6 +39,14 @@ export class NatsClientService implements OnModuleInit, OnModuleDestroy {
     this.logger.log('✅ Connected to NATS and JetStream is set up');
   }
 
+  getJetStream(): JetStreamClient {
+    return this.jetStream;
+  }
+
+  getJetStreamManager() {
+    return this.natsConnection.jetstreamManager();
+  }
+
   async ensureStreamExists(streamName: string, subjects: string[]) {
     try {
       const jsm = await this.natsConnection.jetstreamManager();
