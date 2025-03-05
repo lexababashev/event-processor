@@ -12,9 +12,9 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "user"]
-      interval: 5s
-      timeout: 5s
+      test: ["CMD-SHELL", "pg_isready -U user -d event_processor -h localhost -p 5432 || exit 1"]
+      interval: 10s
+      timeout: 1m
       retries: 5
 
   migrations:
@@ -42,8 +42,9 @@ services:
     volumes:
       - nats-data:/var/lib/nats/jetstream
     healthcheck:
-      test: ["CMD", "nc", "-z", "localhost", "4222"]
-      interval: 5s
+      test: ["CMD", "nats-server", "-v"]
+      interval: 10s
+      timeout: 1m
       retries: 5
     deploy:
       resources:
@@ -98,9 +99,11 @@ services:
       - "9090:9090"
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
-    depends_on:
-      gateway:
-        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:9090/-/ready || exit 1"]
+      interval: 10s
+      timeout: 1m
+      retries: 5
 
   grafana:
     image: grafana/grafana:latest
@@ -123,6 +126,8 @@ services:
       dockerfile: Dockerfile.fscollector
     container_name: event_processor_fscollector
     restart: always
+    ports:
+      - "3002:3002"
     environment:
       DATABASE_URL: "postgresql://user:password@postgres:5432/event_processor?schema=public"
       NATS_URL: "nats://nats:4222"
@@ -146,6 +151,8 @@ services:
       dockerfile: Dockerfile.ttkcollector
     container_name: event_processor_ttkcollector
     restart: always
+    ports:
+      - "3001:3001"
     environment:
       DATABASE_URL: "postgresql://user:password@postgres:5432/event_processor?schema=public"
       NATS_URL: "nats://nats:4222"
@@ -169,6 +176,8 @@ services:
       dockerfile: Dockerfile.reporter
     container_name: event_processor_reporter
     restart: always
+    ports:
+      - "3003:3003"
     environment:
       DATABASE_URL: "postgresql://user:password@postgres:5432/event_processor"
     depends_on:

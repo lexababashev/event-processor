@@ -10,7 +10,7 @@ Ensure you have the following installed:
 - [Node.js](https://nodejs.org/) (recommended version 18 or higher)
 - [Docker](https://www.docker.com/)
 - [Docker Compose](https://docs.docker.com/compose/)
-- [pnpm](https://pnpm.io/) or `npm`
+- [`npm`](https://npm.io/) 
 
 ### Installation & Setup
 
@@ -20,25 +20,18 @@ Ensure you have the following installed:
    cd event-processor
    ```
 
-2. **Copy the environment file:**
-   ```sh
-   cp .env.example .env
-   ```
-   Update the `.env` file with your local database credentials if needed.
+2. **environment file:**
+   i ve added the `.env` file if needed.
 
 3. **Install dependencies:**
    ```sh
    npm install
    ```
 
-4. **Start the database and run migrations:**
+4. **To start application with one command: !!!!!!!!!!!!!!!!**
    ```sh
-   npm run docker:up --build
+   npm run start:prod
    ```
-   This command will:
-   - Start a PostgreSQL container.
-   - Apply all existing Prisma migrations.
-   - Generate the Prisma Client.
 
 ### Running the Project
 #### build applications (run before start running the Project)
@@ -47,9 +40,11 @@ npm run build
 ```
 
 #### Production Mode
-To start application with one command:
+To start a specific service in production mode:
 ```sh
-npm run start:prod
+npm run start:gateway:prod
+npm run start:collectors:prod
+npm run start:reporter:prod
 ```
 
 #### Development Mode
@@ -85,18 +80,6 @@ npm run db:seed
 #### Reset Database
 ```sh
 npm run db:reset
-```
-
-### Running Tests
-
-#### Unit Tests
-```sh
-npm run test
-```
-
-#### Test Coverage
-```sh
-npm run test:cov
 ```
 
 ### Stopping & Cleaning Up
