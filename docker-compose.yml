@@ -42,7 +42,6 @@ services:
     volumes:
       - nats-data:/var/lib/nats/jetstream
     healthcheck:
-      # Пример простой проверки на открытый порт
       test: ["CMD", "nc", "-z", "localhost", "4222"]
       interval: 5s
       retries: 5
