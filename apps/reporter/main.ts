@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { ReporterModule } from './src/report.module';
+import { ReporterModule } from './src/reporter.module';
 import { Logger } from '@nestjs/common';
 
 async function bootstrap() {
