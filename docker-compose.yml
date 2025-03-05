@@ -11,6 +11,11 @@ services:
       - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "user"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   migrations:
     image: node:20-alpine
@@ -19,23 +24,12 @@ services:
     volumes:
       - .:/app
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     environment:
       DATABASE_URL: "postgresql://user:password@postgres:5432/event_processor"
     command: >
       sh -c "npm install && npx prisma migrate deploy && npx prisma generate"
-
-  publisher:
-    image: andriiuni/events
-    container_name: events_publisher
-    restart: always
-    platform: linux/arm64/v8  # Explicitly set the platform
-    environment:
-      EVENT_ENDPOINT: "http://gateway:3000/events"
-    depends_on:
-      - nats
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
 
   nats:
     image: nats:latest
@@ -47,6 +41,11 @@ services:
     command: ["-js", "-m", "8222",  "--store_dir", "/var/lib/nats/jetstream"]
     volumes:
       - nats-data:/var/lib/nats/jetstream
+    healthcheck:
+      # Пример простой проверки на открытый порт
+      test: ["CMD", "nc", "-z", "localhost", "4222"]
+      interval: 5s
+      retries: 5
     deploy:
       resources:
         limits:
@@ -54,8 +53,21 @@ services:
           memory: "4G"
         reservations:
           cpus: "1"
-          memory: "1G"   
-    
+          memory: "1G"
+
+  publisher:
+    image: andriiuni/events
+    container_name: events_publisher
+    restart: always
+    platform: linux/arm64/v8
+    environment:
+      EVENT_ENDPOINT: "http://gateway:3000/events"
+    depends_on:
+      nats:
+        condition: service_healthy
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
   gateway:
     build:
       context: .
@@ -68,7 +80,8 @@ services:
       NATS_URL: "nats://nats:4222"
       GATEWAY_PORT: 3000
     depends_on:
-      - nats
+      nats:
+        condition: service_healthy
     deploy:
       resources:
         limits:
@@ -77,34 +90,33 @@ services:
         reservations:
           cpus: "1"
           memory: "1G"
-    
+
   prometheus:
     image: prom/prometheus:latest
     container_name: event_processor_prometheus
     restart: always
     ports:
-      - "9090:9090" # Prometheus http://localhost:9090
+      - "9090:9090"
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     depends_on:
-      - gateway
-      # - fs-collector
-      # - ttk-collector
-      # - reporter
+      gateway:
+        condition: service_healthy
 
   grafana:
     image: grafana/grafana:latest
     container_name: event_processor_grafana
     restart: always
     ports:
-      - "3031:3000"  # Grafana http://localhost:3031
+      - "3031:3000"
     environment:
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=admin
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
     volumes:
       - grafana-data:/var/lib/grafana
     depends_on:
-      - prometheus
+      prometheus:
+        condition: service_healthy
 
   fs-collector:
     build:
@@ -116,7 +128,10 @@ services:
       DATABASE_URL: "postgresql://user:password@postgres:5432/event_processor?schema=public"
       NATS_URL: "nats://nats:4222"
     depends_on:
-      - nats
+      nats:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
     deploy:
       resources:
         limits:
@@ -136,7 +151,10 @@ services:
       DATABASE_URL: "postgresql://user:password@postgres:5432/event_processor?schema=public"
       NATS_URL: "nats://nats:4222"
     depends_on:
-      - nats
+      nats:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
     deploy:
       resources:
         limits:
@@ -155,7 +173,8 @@ services:
     environment:
       DATABASE_URL: "postgresql://user:password@postgres:5432/event_processor"
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     deploy:
       resources:
         limits:
@@ -164,7 +183,7 @@ services:
         reservations:
           cpus: "1"
           memory: "1G"
-  
+
 volumes:
   nats-data:
   postgres-data:
