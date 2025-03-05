@@ -4,7 +4,7 @@ import { Logger } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(TtkCollectorModule);
-  const port = process.env.TTK_COLLECTOR_PORT || 3003;
+  const port = process.env.TTK_COLLECTOR_PORT || 3001;
 
   await app.listen(port, '0.0.0.0');
 

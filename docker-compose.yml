@@ -145,18 +145,24 @@ services:
           cpus: "1"
           memory: "1G"
 
-  # reporter:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile.reporter
-  #   container_name: event_processor_reporter
-  #   restart: always
-  #   environment:
-  #     NATS_URL: "nats://nats:4222"
-  #     DATABASE_URL: "postgresql://user:password@postgres:5432/event_processor"
-  #   depends_on:
-  #     - nats
-  #     - postgres
+  reporter:
+    build:
+      context: .
+      dockerfile: Dockerfile.reporter
+    container_name: event_processor_reporter
+    restart: always
+    environment:
+      DATABASE_URL: "postgresql://user:password@postgres:5432/event_processor"
+    depends_on:
+      - postgres
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: "2G"
+        reservations:
+          cpus: "1"
+          memory: "1G"
   
 volumes:
   nats-data:
