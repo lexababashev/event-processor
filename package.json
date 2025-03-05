@@ -27,6 +27,7 @@
     "docker:down": "docker-compose down --volumes",
     "db:apply-migrations": "npx prisma migrate deploy",
     "db:generate": "npx prisma generate",
+    "db:seed": "ts-node prisma/seed.ts",
     "db:migrate": "npx prisma migrate dev --name",
     "db:reset": "npx prisma migrate reset --force && npm run db:seed",
     "test": "jest",

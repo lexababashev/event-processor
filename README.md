@@ -72,6 +72,11 @@ npm run db:apply-migrations
 npm run db:generate
 ```
 
+#### Seed Database
+```sh
+npm run db:seed
+```
+
 #### Reset Database
 ```sh
 npm run db:reset
