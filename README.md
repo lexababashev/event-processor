@@ -33,12 +33,32 @@ Ensure you have the following installed:
 
 4. **Start the database and run migrations:**
    ```sh
-   npm run docker:up
+   npm run docker:up --build
    ```
    This command will:
    - Start a PostgreSQL container.
    - Apply all existing Prisma migrations.
    - Generate the Prisma Client.
+
+### Running the Project
+#### build applications (run before start running the Project)
+```sh
+npm run build
+```
+
+#### Production Mode
+To start application with one command:
+```sh
+npm run start:prod
+```
+
+#### Development Mode
+To start a specific service in development mode:
+```sh
+npm run start:gateway
+npm run start:collectors
+npm run start:reporter
+```
 
 ### Database Management
 
@@ -52,42 +72,9 @@ npm run db:apply-migrations
 npm run db:generate
 ```
 
-#### Seed Database
-```sh
-npm run db:seed
-```
-
 #### Reset Database
 ```sh
 npm run db:reset
-```
-
-### Running the Project
-
-#### Development Mode
-To start all services (gateway, collectors, and reporter) in development mode with hot-reloading:
-```sh
-npm run dev
-```
-
-To start a specific service in development mode:
-```sh
-npm run dev:gateway
-npm run dev:collectors
-npm run dev:reporter
-```
-
-#### Production Mode
-To start all services (gateway, collectors, and reporter) in production mode:
-```sh
-npm run start:prod
-```
-
-To start a specific service in production mode:
-```sh
-npm run prod:gateway
-npm run prod:collectors
-npm run prod:reporter
 ```
 
 ### Running Tests
@@ -95,11 +82,6 @@ npm run prod:reporter
 #### Unit Tests
 ```sh
 npm run test
-```
-
-#### E2E Tests
-```sh
-npm run test:e2e
 ```
 
 #### Test Coverage

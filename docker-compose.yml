@@ -90,6 +90,7 @@ services:
       - gateway
       # - fs-collector
       # - ttk-collector
+      # - reporter
 
   grafana:
     image: grafana/grafana:latest
