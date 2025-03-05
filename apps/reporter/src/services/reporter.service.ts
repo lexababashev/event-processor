@@ -8,9 +8,6 @@ export class ReportsService {
 
   constructor(private readonly prisma: PrismaClient) {}
 
-  /**
-   * Aggregated event statistics with optional filters.
-   */
   async getEventStats(filters: EventFilter) {
     try {
       const { from, to, source, funnelStage, eventType } = filters;
@@ -41,9 +38,6 @@ export class ReportsService {
     }
   }
 
-  /**
-   * Aggregated revenue data from Facebook / Tiktok events.
-   */
   async getRevenueStats(filters: RevenueFilter) {
     try {
       const { from, to, source, campaignId } = filters;
@@ -76,10 +70,7 @@ export class ReportsService {
       throw new InternalServerErrorException('Database query failed');
     }
   }
-
-  /**
-   * Returns user demographic data with filters depending on source.
-   */
+  
   async getDemographics(filters: DemographicsFilter) {
     try {
       const { from, to, source } = filters;

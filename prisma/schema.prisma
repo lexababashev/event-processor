@@ -71,9 +71,6 @@ model Event {
   @@map("events")
 }
 
-/**
- * Facebook-specific event data
- */
 model FacebookEventData {
   id            String           @id @default(uuid())
   userId        String
@@ -99,9 +96,6 @@ model FacebookEventData {
   @@map("facebook_event_data")
 }
 
-/**
- * TikTok-specific event data
- */
 model TiktokEventData {
   id               String        @id @default(uuid())
   userId           String
@@ -117,7 +111,6 @@ model TiktokEventData {
   purchasedItem    String?
   purchaseAmount   Decimal?
 
-  // Relation back to Event
   event   Event  @relation(fields: [eventId], references: [id])
   eventId String @unique  // Added @unique constraint
 

@@ -23,15 +23,11 @@ export class FsCollectorService {
     private readonly prisma: PrismaService,
   ) {}
 
-  /**
-   * Subscribes exclusively to the "FB_EVENTS.new" subject from JetStream.
-   */
   async subscribeToFacebookStream(): Promise<void> {
     try {
       const jetStream = this.natsClientService.getJetStream();
       const jsm = await this.natsClientService.getJetStreamManager();
 
-      // Создаем consumer (если он не существует)
       await jsm.consumers.add('FB_EVENTS', {
         durable_name: 'facebook-events-consumer',
         ack_policy: AckPolicy.Explicit,
@@ -40,14 +36,12 @@ export class FsCollectorService {
 
       this.logger.log('✅ Consumer created for FB_EVENTS');
 
-      // Подключаемся к созданному consumer
       const consumer = await jetStream.consumers.get(
         'FB_EVENTS',
         'facebook-events-consumer',
       );
       this.logger.log('✅ Consumer "facebook-events-consumer" attached');
 
-      // Читаем сообщения потоком
       const sub = await consumer.consume();
       this.logger.log('✅ Subscribed to FB_EVENTS.new');
 
@@ -74,9 +68,6 @@ export class FsCollectorService {
     }
   }
 
-  /**
-   * Stores a Facebook event in the database using Prisma.
-   */
   private async storeFacebookEvent(event: FacebookEvent) {
     try {
       const { user, engagement } = event.data;
@@ -143,9 +134,6 @@ export class FsCollectorService {
     }
   }
 
-  /**
-   * A simple test method to manually insert a sample Facebook event into the DB.
-   */
   async testStoreEvent(eventData: FacebookEvent) {
     this.logger.log(`Received test event: ${eventData.eventId}`);
     try {

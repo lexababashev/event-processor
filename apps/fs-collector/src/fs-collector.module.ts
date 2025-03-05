@@ -7,7 +7,6 @@ import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-    // .env file is loaded in the root module
     ConfigModule.forRoot({
       isGlobal: true,
     }),

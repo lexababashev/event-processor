@@ -5,7 +5,6 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('Seeding data...');
 
-  // Генерация 10 событий для Facebook
   for (let i = 1; i <= 10; i++) {
     const eventFacebook = await prisma.event.create({
       data: {
@@ -39,7 +38,6 @@ async function main() {
     console.log(`Facebook event ${eventFacebook.eventId} created`);
   }
 
-  // Генерация 10 событий для TikTok
   for (let i = 1; i <= 10; i++) {
     const eventTiktok = await prisma.event.create({
       data: {

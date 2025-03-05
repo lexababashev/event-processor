@@ -7,7 +7,6 @@ import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 
 @Module({
   imports: [
-    // .env file is loaded in the root module
     ConfigModule.forRoot({
       isGlobal: true,
     }),

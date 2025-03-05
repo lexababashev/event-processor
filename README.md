@@ -62,9 +62,14 @@ npm run start:reporter
 
 ### Database Management
 
-#### Apply Migrations
+#### Apply Migrations and Generate Prisma Client automaticlly in docker
 ```sh
 npm run db:apply-migrations
+```
+
+#### Apply Migrations (change DATABASE_URL on DATABASE_URL_LOCAL in schema.prisma)
+```sh
+npx prisma migrate deploy
 ```
 
 #### Generate Prisma Client (run after applying migrations)
@@ -100,16 +105,3 @@ To stop all containers and remove volumes:
 ```sh
 npm run docker:down
 ```
-
-### Deployment
-When you're ready to deploy your NestJS application to production, follow the [deployment documentation](https://docs.nestjs.com/deployment).
-
-If deploying on AWS, consider using [Mau](https://mau.nestjs.com):
-```sh
-npm install -g mau
-mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-Happy coding! 🚀
