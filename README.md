@@ -57,12 +57,7 @@ npm run start:reporter
 
 ### Database Management
 
-#### Apply Migrations and Generate Prisma Client automaticlly in docker
-```sh
-npm run db:apply-migrations
-```
-
-#### Apply Migrations (change DATABASE_URL on DATABASE_URL_LOCAL in schema.prisma)
+#### Apply Migrations
 ```sh
 npx prisma migrate deploy
 ```
