@@ -6,7 +6,7 @@ COPY package*.json ./
 RUN npm install
 
 COPY . .
-RUN npm run build:reporter
+RUN npm run build:ttk-collector
 
 FROM node:20-alpine AS production
 
