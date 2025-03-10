@@ -39,7 +39,10 @@ export const facebookEventSchema = z.object({
   ]),
   data: z.object({
     user: facebookUserSchema,
-    engagement: z.union([facebookEngagementTopSchema, facebookEngagementBottomSchema]),
+    engagement: z.union([
+      facebookEngagementTopSchema,
+      facebookEngagementBottomSchema,
+    ]),
   }),
 });
 
@@ -75,7 +78,10 @@ export const tiktokEventSchema = z.object({
   ]),
   data: z.object({
     user: tiktokUserSchema,
-    engagement: z.union([tiktokEngagementTopSchema, tiktokEngagementBottomSchema]),
+    engagement: z.union([
+      tiktokEngagementTopSchema,
+      tiktokEngagementBottomSchema,
+    ]),
   }),
 });
 

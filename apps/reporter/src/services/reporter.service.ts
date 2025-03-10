@@ -1,6 +1,14 @@
-import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import { EventFilter, RevenueFilter, DemographicsFilter } from '../types/filters';
+import {
+  EventFilter,
+  RevenueFilter,
+  DemographicsFilter,
+} from '../types/filters';
 
 @Injectable()
 export class ReportsService {
@@ -42,8 +50,10 @@ export class ReportsService {
     try {
       const { from, to, source, campaignId } = filters;
       const baseWhere: any = {};
-      if (from) baseWhere.timestamp = { ...baseWhere.timestamp, gte: new Date(from) };
-      if (to) baseWhere.timestamp = { ...baseWhere.timestamp, lte: new Date(to) };
+      if (from)
+        baseWhere.timestamp = { ...baseWhere.timestamp, gte: new Date(from) };
+      if (to)
+        baseWhere.timestamp = { ...baseWhere.timestamp, lte: new Date(to) };
       if (source) baseWhere.source = source;
 
       if (campaignId) {
@@ -70,15 +80,17 @@ export class ReportsService {
       throw new InternalServerErrorException('Database query failed');
     }
   }
-  
+
   async getDemographics(filters: DemographicsFilter) {
     try {
       const { from, to, source } = filters;
       const baseWhere: any = {};
-      if (from) baseWhere.timestamp = { ...baseWhere.timestamp, gte: new Date(from) };
-      if (to) baseWhere.timestamp = { ...baseWhere.timestamp, lte: new Date(to) };
+      if (from)
+        baseWhere.timestamp = { ...baseWhere.timestamp, gte: new Date(from) };
+      if (to)
+        baseWhere.timestamp = { ...baseWhere.timestamp, lte: new Date(to) };
       if (source) baseWhere.source = source;
-  
+
       const [fbData, ttData] = await Promise.all([
         this.prisma.facebookEventData.groupBy({
           by: ['gender'],
@@ -93,7 +105,7 @@ export class ReportsService {
           _count: { _all: true },
         }),
       ]);
-  
+
       return {
         facebookDemographics: fbData,
         tiktokDemographics: ttData,

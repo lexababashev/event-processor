@@ -49,7 +49,6 @@ export class TtkCollectorService {
             msg.ack();
 
             //this.logger.log(`✅ Event ${eventData.eventId} acknowledged`);
-            
           } catch (err) {
             this.logger.error(`❌ Failed to process TT event: ${err.message}`);
           }

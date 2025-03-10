@@ -1,4 +1,10 @@
-import { Controller, Post, Body, Logger, BadRequestException } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Logger,
+  BadRequestException,
+} from '@nestjs/common';
 import { EventsService } from '../services/events.service';
 import { Event } from '@app/common/types/event';
 import { eventSchema } from '../schemas/event.schema';
@@ -19,7 +25,7 @@ export class EventsController {
         eventSchema.parse(events[0]);
         eventSchema.parse(events[Math.floor(Math.random() * events.length)]);
       } else {
-        events.forEach(event => eventSchema.parse(event));
+        events.forEach((event) => eventSchema.parse(event));
       }
     } catch (error) {
       throw new BadRequestException('Invalid event format', { cause: error });
