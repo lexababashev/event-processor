@@ -20,15 +20,12 @@ Ensure you have the following installed:
    cd event-processor
    ```
 
-2. **environment file:**
-   i ve added the `.env` file if needed.
-
-3. **Install dependencies:**
+2. **Install dependencies:**
    ```sh
    npm install
    ```
 
-4. **To start application with one command: !!!!!!!!!!!!!!!!**
+3. **To start application with one command: !!!!!!!!!!!!!!!!**
    ```sh
    npm run start:prod
    ```
